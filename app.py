@@ -6,7 +6,7 @@ app = Flask(__name__)
 app.secret_key = "estoque_automotivo_secreto"
 
 ADMIN_USER = "admin"
-ADMIN_PASS = "1234"
+ADMIN_PASS = "F3a2--329"
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -198,7 +198,7 @@ def solicitar(id):
             f"Endereço: {endereco}"
         )
 
-        link = f"https://wa.me/5518991796621?text={quote(mensagem)}"
+        link = f"https://wa.me/5518997407413?text={quote(mensagem)}"
         return redirect(link)
 
     con.close()

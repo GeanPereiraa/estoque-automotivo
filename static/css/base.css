@@ -41,3 +41,22 @@ nav a:hover {
     padding: 25px;
     border-radius: 6px;
 }
+
+
+.footer {
+    margin-top: 40px;
+    padding: 15px;
+    background-color: #111;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+}
+
+.footer p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+.footer strong {
+    color: #00c853;
+}
