@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<div class="home">
+    <h2>Bem-vindo ao Estoque Automotivo</h2>
+    <p>Gerencie produtos, pedidos e estoque de forma simples.</p>
+</div>
+{% endblock %}

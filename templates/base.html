@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Estoque Automotivo{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    {% block css %}{% endblock %}
+</head>
+<body>
+
+<header>
+    <h1>ZAC ESTOQUE AUTOMOTIVO</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/produtos">Produtos</a>
+        <a href="/novo_produto">Novo Produto</a>
+        <a href="/admin">Admin</a>
+        <a href="/login">Login</a>
+        <a href="/logout">Sair</a>
+    </nav>
+</header>
+
+<div class="container">
+    {% block conteudo %}{% endblock %}
+</div>
+
+</body>
+</html>

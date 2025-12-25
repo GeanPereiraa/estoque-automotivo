@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+
+<h2>Área Administrativa</h2>
+
+<!-- DASHBOARD SIMPLES -->
+<div class="dashboard">
+    <div class="card">
+        <h3>Total de Pedidos</h3>
+        <p>{{ pedidos|length }}</p>
+    </div>
+</div>
+
+<hr>
+
+<!-- PRODUTOS MAIS SOLICITADOS -->
+<h3>Produtos Mais Solicitados</h3>
+
+<table>
+    <tr>
+        <th>Produto</th>
+        <th>Quantidade Vendida</th>
+    </tr>
+
+    {% for v in vendidos %}
+    <tr>
+        <td>{{ v[0] }}</td>
+        <td>{{ v[1] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<hr>
+
+<!-- HISTÓRICO DE PEDIDOS -->
+<h3>Histórico de Pedidos</h3>
+
+<table>
+<tr>
+  <th>Cliente</th>
+  <th>Produto</th>
+  <th>Quantidade</th>
+  <th>Endereço</th>
+  <th>Status</th>
+  <th>Ação</th>
+</tr>
+
+{% for p in pedidos %}
+<tr>
+  <td>{{ p["cliente"] }}</td>
+  <td>{{ p["produto_nome"] }}</td>
+  <td>{{ p["quantidade"] }}</td>
+  <td>{{ p["endereco"] }}</td>
+  <td>{{ p["status"] }}</td>
+<td>
+            {% if p["status"] == "Pendente" %}
+                <a href="/pedido_resolvido/{{ p['id'] }}">
+                    Marcar como resolvido
+                </a>
+            {% else %}
+                ✔ Resolvido
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/solicitar.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+
+
+<h2>Solicitar Produto</h2>
+
+<form method="POST">
+    <input type="text" name="nome" placeholder="Seu nome" required>
+
+    <input type="text" name="endereco" placeholder="Endereço de entrega" required>
+
+    <input type="number" name="quantidade" placeholder="Quantidade" required>
+
+    <button type="submit">Solicitar</button>
+</form>
+
+{% if erro %}
+<p class="erro">{{ erro }}</p>
+{% endif %}
+
+</form>
+{% endblock %}

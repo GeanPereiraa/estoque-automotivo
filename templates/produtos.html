@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/produtos.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<h2>Produtos</h2>
+
+<div class="cards">
+{% for p in produtos %}
+  <div class="card">
+    <h3>{{ p[1] }}</h3>
+    <p>Quantidade: {{ p[2] }}</p>
+
+    {% if p[2] > 0 %}
+      <a href="/solicitar/{{ p[0] }}" class="btn">Solicitar</a>
+    {% else %}
+      <span class="indisponivel">Sem estoque</span>
+    {% endif %}
+  </div>
+{% endfor %}
+</div>
+
+{% endblock %}

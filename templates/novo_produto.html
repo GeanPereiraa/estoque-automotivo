@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/novo_produto.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<h2>Novo Produto</h2>
+
+<form action="/salvar_produto" method="POST">
+    <label>Nome do produto</label><br>
+    <input type="text" name="nome" required><br><br>
+
+    <label>Quantidade</label><br>
+    <input type="number" name="quantidade" min="1" required><br><br>
+
+    <button type="submit">Salvar Produto</button>
+</form>
+
+
+{% endblock %}
