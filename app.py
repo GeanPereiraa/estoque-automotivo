@@ -198,8 +198,12 @@ def solicitar(id):
             f"Endereço: {endereco}"
         )
 
-        link = f"https://wa.me/5518997407413?text={quote(mensagem)}"
-        return redirect(link)
+        mensagem = quote(mensagem)
+
+        link_whatsapp = f"https://wa.me/5518991796621?text={mensagem}"
+        return redirect(link_whatsapp)
+
+
 
     con.close()
     return render_template("solicitar.html", produto=produto, erro=erro)
