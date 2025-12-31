@@ -237,7 +237,7 @@ def solicitar(id):
 
         # salva pedido (SEM criar produto novo)
         cur.execute("""
-            INSERT INTO pedidos (cliente, endereco, produto_nome, quantidade, status)
+            INSERT INTO pedidos (nome_cliente, endereco, produto_nome, quantidade, status)
             VALUES (?, ?, ?, ?, ?)
         """, (
             nome,
