@@ -7,15 +7,22 @@
 {% block conteudo %}
 <h2>Novo Produto</h2>
 
-<form action="/salvar_produto" method="POST">
+<form action="/salvar_produto" method="POST" enctype="multipart/form-data">
     <label>Nome do produto</label><br>
     <input type="text" name="nome" required><br><br>
 
     <label>Quantidade</label><br>
     <input type="number" name="quantidade" min="1" required><br><br>
 
+    <label>Descrição do produto</label>
+    <textarea name="descricao" placeholder="Ex: Cheirinho automotivo, fragrancia suave..." required></textarea>
+
+    <label>Imagem do produto</label>
+    <input type="file" name="imagem" accept="imagem/*" required>
+
     <button type="submit">Salvar Produto</button>
 </form>
+
 
 
 {% endblock %}

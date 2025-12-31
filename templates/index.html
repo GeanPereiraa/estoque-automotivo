@@ -4,9 +4,32 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 {% endblock %}
 
+
+
 {% block conteudo %}
-<div class="home">
-    <h2>Bem-vindo ao Estoque Automotivo</h2>
-    <p>Gerencie produtos, pedidos e estoque de forma simples.</p>
+<h1>Estoque Automotivo</h1>
+
+<div class="cards">
+    {% for p in produtos %}
+    <div class="card">
+
+        <img 
+            src="{{ url_for('static', filename='imagens/' ~ (p['imagem'] or 'sem-imagem.png')) }}"
+            alt="{{ p['nome'] }}"
+            class="produto-img"
+        >
+        
+        <h3>{{ p['nome'] }}</h3>
+        <p class="descricao">{{ p['descricao'] }}</p>
+
+        <p><strong>Estoque:</strong> {{ p['quantidade'] }}</p>
+
+        <a href="/solicitar/{{ p['id'] }}" class="btn">Solicitar</a>
+
+    </div>
+
+    {% endfor %}
 </div>
+
+
 {% endblock %}

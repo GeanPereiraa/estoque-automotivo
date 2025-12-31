@@ -25,7 +25,6 @@ def criar_tabela_pedidos():
     con.commit()
     con.close()
 
-criar_tabela_pedidos()
 
 
 def criar_tabelas():
@@ -45,6 +44,6 @@ def criar_tabelas():
 
 
 
-
+criar_tabela_pedidos()
 criar_tabelas()
 print ("Banco de dados criado com sucesso !")

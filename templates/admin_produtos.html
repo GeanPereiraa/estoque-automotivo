@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_produtos.css') }}">
+{% endblock %}
+
+
+{% block conteudo %}
+<h2>Gerenciar Produtos</h2>
+
+<table>
+    <tr>
+        <th>Produto</th>
+        <th>Estoque</th>
+        <th>Ação</th>
+    </tr>
+
+    {% for p in produtos %}
+    <tr>
+        <td>{{ p["nome"] }}</td>
+        <td>
+            {% if p["quantidade"] > 0 %}
+                {{ p["quantidade"] }}
+            {% else %}
+                <span style="color:red;">Sem estoque</span>
+            {% endif %}
+        </td>
+        <td>
+    <a href="/admin/remover_produto/{{ p['id'] }}"
+       class="btn-remover"
+       onclick="return confirm('Deseja remover este produto?')">
+       🗑 Remover
+    </a>
+</td>
+    {% endfor %}
+</table>
+
+<a href="/admin">← Voltar</a>
+{% endblock %}

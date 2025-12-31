@@ -6,6 +6,11 @@
 
 {% block conteudo %}
 
+
+<div class="admin-acoes">
+    <a href="/admin/produtos" class="btn-admin">Gerenciar Produtos</a>
+</div>
+
 <h2>Área Administrativa</h2>
 
 <!-- DASHBOARD SIMPLES -->
@@ -70,5 +75,40 @@
     {% endfor %}
 </table>
 
+<hr>
+
+<h2>🏆 Ranking de Produtos Mais Vendidos</h2>
+
+<table border="1" width="100%">
+    <tr>
+        <th>Produto</th>
+        <th>Total Vendido</th>
+    </tr>
+
+    {% for r in ranking %}
+    <tr>
+        <td>{{ r['produto_nome'] }}</td>
+        <td>{{ r['total_vendido'] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+<hr>
+
+<h2>📊 Gráfico de Produtos Mais Vendidos</h2>
+
+<div class="grafico">
+    {% for r in ranking %}
+    <div class="grafico-item">
+        <span class="nome-produto">{{ r['produto_nome'] }}</span>
+        <div class="barra-container">
+            <div class="barra" style="width: {{ r['total_vendido'] * 20 }}px;">
+                {{ r['total_vendido'] }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 
 {% endblock %}

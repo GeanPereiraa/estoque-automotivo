@@ -1,9 +1,14 @@
 from flask import Flask, render_template, request, redirect, session
 from database import conectar
+import os
+from werkzeug.utils import secure_filename
 
 
 app = Flask(__name__)
 app.secret_key = "estoque_automotivo_secreto"
+
+UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'imagens')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 ADMIN_USER = "admin"
 ADMIN_PASS = "F3a2--329"
@@ -29,7 +34,17 @@ def login():
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    con = conectar()
+    cur = con.cursor()
+
+
+    cur.execute("SELECT * FROM produtos")
+    produtos = cur.fetchall()
+
+    con.close()
+
+
+    return render_template("index.html", produtos=produtos)
 
 
 @app.route("/novo_produto", methods=["GET"])
@@ -47,7 +62,18 @@ def salvar_produto():
 
 
     nome = request.form.get("nome")
+    descricao = request.form["descricao"]
     quantidade = request.form.get("quantidade")
+    imagem = request.files.get("imagem")
+
+    if imagem and imagem.filename != "":
+        nome_arquivo = secure_filename(imagem.filename)
+        caminho = os.path.join(app.config['UPLOAD_FOLDER'], nome_arquivo)
+        imagem.save(caminho)
+    else:
+        nome_arquivo = "sem-imagem.png"
+
+
 
     if not nome or not quantidade:
         return redirect("/novo_produto")
@@ -71,14 +97,18 @@ def salvar_produto():
         )
     else:
         cur.execute(
-            "INSERT INTO produtos (nome, quantidade) VALUES (?, ?)",
-            (nome, quantidade)
+            "INSERT INTO produtos (nome,descricao ,quantidade, imagem) VALUES (?, ?, ?, ?)",
+            (nome, descricao, quantidade, nome_arquivo)
         )
+
 
     con.commit()
     con.close()
 
+    print("IMAGEM SALVA:", nome_arquivo)
+    print("CAMINHO:", caminho)
     return redirect("/produtos")
+
 
 
 @app.route("/pedido_resolvido/<int:id>")
@@ -153,6 +183,8 @@ def solicitar(id):
 
     erro = None
 
+
+
     if request.method == "POST":
         nome = request.form.get("nome")
         endereco = request.form.get("endereco")
@@ -191,19 +223,17 @@ def solicitar(id):
         con.close()
 
         mensagem = (
-            f"📦 NOVO PEDIDO\n"
-            f"Cliente: {nome}\n"
-            f"Produto: {produto['nome']}\n"
-            f"Quantidade: {quantidade}\n"
-            f"Endereço: {endereco}"
+            f"📦 *NOVO PEDIDO*\n\n"
+            f"👤 Cliente: {nome}\n"
+            f"🛒 Produto: {produto['nome']}\n"
+            f"🔢 Quantidade: {quantidade}\n"
+            f"📍 Endereço: {endereco}"
         )
 
         mensagem = quote(mensagem)
 
         link_whatsapp = f"https://wa.me/5518991796621?text={mensagem}"
         return redirect(link_whatsapp)
-
-
 
     con.close()
     return render_template("solicitar.html", produto=produto, erro=erro)
@@ -217,7 +247,7 @@ def admin():
     con = conectar()
     cur = con.cursor()
 
-    cur.execute("SELECT * FROM pedidos")
+    cur.execute("SELECT * FROM pedidos ORDER BY id DESC")
     pedidos = cur.fetchall()
 
     cur.execute("""
@@ -228,9 +258,17 @@ def admin():
         """)
     vendidos = cur.fetchall()
 
+    cur.execute("""
+        SELECT produto_nome, SUM(quantidade) AS total_vendido
+        FROM pedidos
+        GROUP BY produto_nome
+        ORDER BY SUM(quantidade) DESC
+        """)
+    ranking = cur.fetchall()
+
     con.close()
 
-    return render_template("admin.html", pedidos=pedidos, vendidos=vendidos)
+    return render_template("admin.html", pedidos=pedidos, vendidos=vendidos, ranking=ranking)
 
 
 @app.route("/aprovar/<int:id>")
@@ -251,6 +289,32 @@ def aprovar(id):
     return redirect("/admin")
 
 
+@app.route("/admin/remover_produto/<int:id>")
+def remover_produto(id):
+    # proteção básica (se tiver login admin depois)
+    con = conectar()
+    cur = con.cursor()
+
+    cur.execute("DELETE FROM produtos WHERE id = ?", (id,))
+
+    con.commit()
+    con.close()
+
+    return redirect("/admin")
+
+
+
+@app.route("/admin/produtos")
+def admin_produtos():
+    con = conectar()
+    cur = con.cursor()
+    produtos = cur.execute("SELECT * FROM produtos").fetchall()
+    con.close()
+
+    return render_template("admin_produtos.html", produtos=produtos)
+
+
+
 @app.route("/logout")
 def logout():
     session.clear()
@@ -258,5 +322,8 @@ def logout():
 
 
 
+
+
 if __name__ == "__main__":
     app.run(debug=True)
+
