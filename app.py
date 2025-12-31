@@ -14,6 +14,41 @@ ADMIN_USER = "admin"
 ADMIN_PASS = "F3a2--329"
 
 
+def ajustar_banco():
+    con = conectar()
+    cur = con.cursor()
+
+    # Verifica colunas atuais
+    colunas = [c[1] for c in cur.execute("PRAGMA table_info(produtos)")]
+
+    if "descricao" not in colunas or "imagem" not in colunas:
+        print("⚠️ Ajustando estrutura da tabela produtos")
+
+        cur.execute("ALTER TABLE produtos RENAME TO produtos_old")
+
+        cur.execute("""
+        CREATE TABLE produtos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT,
+            descricao TEXT,
+            quantidade INTEGER,
+            imagem TEXT
+        )
+        """)
+
+        cur.execute("""
+        INSERT INTO produtos (id, nome, quantidade)
+        SELECT id, nome, quantidade FROM produtos_old
+        """)
+
+        cur.execute("DROP TABLE produtos_old")
+
+    con.commit()
+    con.close()
+
+ajustar_banco()
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     erro = None
@@ -45,22 +80,6 @@ def index():
 
 
     return render_template("index.html", produtos=produtos)
-
-
-def ajustar_banco():
-    con = conectar()
-    cur = con.cursor()
-
-    colunas = [c[1] for c in cur.execute("PRAGMA table_info(produtos)")]
-
-    if "descricao" not in colunas:
-        cur.execute("ALTER TABLE produtos ADD COLUMN descricao TEXT")
-
-    if "imagem" not in colunas:
-        cur.execute("ALTER TABLE produtos ADD COLUMN imagem TEXT")
-
-    con.commit()
-    con.close()
 
 
 @app.route("/novo_produto", methods=["GET"])
