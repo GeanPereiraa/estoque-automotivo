@@ -47,6 +47,22 @@ def index():
     return render_template("index.html", produtos=produtos)
 
 
+def ajustar_banco():
+    con = conectar()
+    cur = con.cursor()
+
+    colunas = [c[1] for c in cur.execute("PRAGMA table_info(produtos)")]
+
+    if "descricao" not in colunas:
+        cur.execute("ALTER TABLE produtos ADD COLUMN descricao TEXT")
+
+    if "imagem" not in colunas:
+        cur.execute("ALTER TABLE produtos ADD COLUMN imagem TEXT")
+
+    con.commit()
+    con.close()
+
+
 @app.route("/novo_produto", methods=["GET"])
 def pagina_novo_produto():
     if not session.get("admin"):
@@ -321,20 +337,6 @@ def logout():
     return redirect("/")
 
 
-def ajustar_banco():
-    con = conectar()
-    cur = con.cursor()
-
-    colunas = [c[1] for c in cur.execute("PRAGMA table_info(produtos)")]
-
-    if "imagem" not in colunas:
-        cur.execute("ALTER TABLE produtos ADD COLUMN imagem TEXT")
-
-    if "descricao" not in colunas:
-        cur.execute("ALTER TABLE produtos ADD COLUMN descricao TEXT")
-
-    con.commit()
-    con.close()
 
 
 
